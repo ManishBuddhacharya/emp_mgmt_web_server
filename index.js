@@ -9,7 +9,7 @@ express.use(cors());
 express.use(bodyParser.json());
 express.options('*', cors());
 
-const contact = require('./handlers/employeeHandler');
+const employee = require('./handlers/employeeHandler');
 
 // create a route handler
 function rootHandler(request, response) {
@@ -19,9 +19,10 @@ function rootHandler(request, response) {
 
 
 // create new user
-express.post('/contact', contact.insert);
-express.get('/contact', contact.fetchContact);
-// express.put('/contact', contact.updateContact);
+express.post('/employee', employee.insertEmployee);
+express.get('/employee', employee.fetchEmployee);
+express.put('/employee', employee.updateEmployee);
+express.delete('/employee', employee.deleteEmployee);
 
 
 // mount the handler to the route
