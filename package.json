@@ -1,0 +1,26 @@
+{
+  "name": "Emp_mgmt_web_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "migration:make": "knex migrate:make --knexfile ./knexfile.js",
+    "migration:run": "knex migrate:latest --knexfile ./knexfile.js",
+    "watch": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "knex": "^0.16.5",
+    "mysql": "^2.17.1",
+    "mysql3": "^0.1.5",
+    "nodemon": "^1.19.0",
+    "sqlite3": "^4.0.8"
+  }
+}
