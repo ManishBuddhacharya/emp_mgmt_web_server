@@ -8,7 +8,6 @@ const knex = require('knex')(config);
 function insertEmployee(request, response) {
     knex('employee')
         .insert({
-            id: 7,
             name: request.body.name,
             address: request.body.address,
             salary: request.body.salary,
