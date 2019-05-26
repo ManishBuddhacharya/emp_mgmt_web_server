@@ -19,10 +19,12 @@ function rootHandler(request, response) {
 
 
 // create new user
+express.get('/api/login', rootHandler);
 express.post('/employee', employee.insertEmployee);
 express.get('/employee', employee.fetchEmployee);
-express.put('/employee', employee.updateEmployee);
-express.delete('/employee', employee.deleteEmployee);
+express.get('/employee/:empID', employee.searchEmployee);
+express.put('/employee/:empID', employee.updateEmployee);
+express.delete('/employee/:empID', employee.deleteEmployee);
 
 
 // mount the handler to the route

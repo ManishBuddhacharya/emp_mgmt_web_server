@@ -27,9 +27,8 @@ function insertEmployee(request, response) {
 function fetchEmployee(request, response) {
     knex.select('*').from('employee').
     then(data => {
-        response.json({
-            data: data
-        })
+        response.json(data
+        )
     }).catch(error => {
         console.log(error);
         response.json({
@@ -38,9 +37,23 @@ function fetchEmployee(request, response) {
     })
 }
 
+function searchEmployee(request, response) {
+    knex('employee').where({ id:request.params.empID }).
+    then(data => {
+        response.json(data[0])
+    }).catch(error => {
+        console.log(error);
+        response.json({
+            status: "error"
+        });
+    })
+}
+
+
+
 function updateEmployee(request, response) {
     knex('employee')
-        .where({ id: request.body.empId })
+        .where({ id: request.params.empID })
         .update({
             name: request.body.name,
             address: request.body.address,
@@ -63,7 +76,7 @@ function updateEmployee(request, response) {
 
 function deleteEmployee(request, response) {
     knex('employee')
-        .where('id', request.body.empId)
+        .where('id', request.params.empID)
         .del()
         .then(data => {
             response.json({
@@ -85,5 +98,6 @@ module.exports = {
     "insertEmployee": insertEmployee,
     "updateEmployee": updateEmployee,
     "deleteEmployee": deleteEmployee,
+    "searchEmployee": searchEmployee,
     "fetchEmployee": fetchEmployee
 }
