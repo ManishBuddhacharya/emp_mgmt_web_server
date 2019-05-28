@@ -4,100 +4,70 @@ let config = require('../knexfile');
 let conn = mysql.createConnection(config.connection);
 const knex = require('knex')(config);
 
+const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
 
-function insertEmployee(request, response) {
-    knex('employee')
-        .insert({
-            name: request.body.name,
-            address: request.body.address,
-            salary: request.body.salary,
-            age: request.body.age
-        }).then(data => {
-            response.json({
-                status: "ok"
+function insertUser(request, response) {
+    let password = request.body.password;
+    bcrypt.hash(password, 10, function(err, hashedPassword) {
+        knex('user')
+            .insert({
+                fname: request.body.fname,
+                lname: request.body.lname,
+                username: request.body.username,
+                password: hashedPassword
+            }).then(data => {
+                response.json({
+                    status: "ok"
+                })
+            }).catch(error => {
+                console.log(error);
+                response.json({
+                    status: "error"
+                });
             })
-        }).catch(error => {
-            console.log(error);
-            response.json({
-                status: "error"
-            });
-        })
+    });
 }
 
-function fetchEmployee(request, response) {
-    knex.select('*').from('employee').
+
+function loginUser(request, response) {
+    const username = request.body.username;
+    const password = request.body.password;
+
+    knex('user').where({ username: username }).
     then(data => {
-        response.json(data
-        )
+        bcrypt.compare(password, data[0].password, function(err, res) {
+            if (res) {
+                const token = jwt.sign({username:username},'secret');
+                response.statusCode = 200;
+                response.setHeader('Content-Type', 'application/json');
+                response.json({ 
+                    success: true, 
+                    status: 'You are successfully logged in!',
+                    accessToken: token
+                });
+            } else {
+                console.log("error")
+                response.json({
+                    success: false,
+                    status: 'incorrect!'
+                });
+            }
+        });
+
     }).catch(error => {
         console.log(error);
         response.json({
-            status: "error"
+            success: false
         });
     })
-}
-
-function searchEmployee(request, response) {
-    knex('employee').where({ id:request.params.empID }).
-    then(data => {
-        response.json(data[0])
-    }).catch(error => {
-        console.log(error);
-        response.json({
-            status: "error"
-        });
-    })
-}
 
 
-
-function updateEmployee(request, response) {
-    knex('employee')
-        .where({ id: request.params.empID })
-        .update({
-            name: request.body.name,
-            address: request.body.address,
-            salary: request.body.salary,
-            age: request.body.age
-        })
-        .then(data => {
-            response.json({
-                status: "updated"
-            })
-
-        })
-        .catch(error => {
-            console.log(error);
-            response.json({
-                status: "error"
-            });
-        })
-}
-
-function deleteEmployee(request, response) {
-    knex('employee')
-        .where('id', request.params.empID)
-        .del()
-        .then(data => {
-            response.json({
-                status: "deleted"
-            })
-
-        })
-        .catch(error => {
-            console.log(error);
-            response.json({
-                status: "error"
-            });
-        })
 }
 
 
 
 module.exports = {
-    "insertEmployee": insertEmployee,
-    "updateEmployee": updateEmployee,
-    "deleteEmployee": deleteEmployee,
-    "searchEmployee": searchEmployee,
-    "fetchEmployee": fetchEmployee
+    "insertUser": insertUser,
+    "loginUser": loginUser
 }

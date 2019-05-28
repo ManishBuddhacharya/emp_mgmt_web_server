@@ -2,6 +2,7 @@ const Express = require('express');
 var bodyParser = require("body-parser");
 var cors = require('cors');
 
+var uploadRouter = require('./routes/upload');
 
 // create an express instance/object
 const express = new Express();
@@ -9,7 +10,8 @@ express.use(cors());
 express.use(bodyParser.json());
 express.options('*', cors());
 
-const employee = require('./handlers/employeeHandler');
+const user = require('./handlers/employeeHandler');
+const item = require('./handlers/itemsHandler');
 
 // create a route handler
 function rootHandler(request, response) {
@@ -17,14 +19,13 @@ function rootHandler(request, response) {
 }
 
 
-
 // create new user
 express.get('/api/login', rootHandler);
-express.post('/employee', employee.insertEmployee);
-express.get('/employee', employee.fetchEmployee);
-express.get('/employee/:empID', employee.searchEmployee);
-express.put('/employee/:empID', employee.updateEmployee);
-express.delete('/employee/:empID', employee.deleteEmployee);
+express.post('/user', user.insertUser);
+express.post('/user/login', user.loginUser);
+express.get('/item', item.fetchItem);
+express.post('/item', item.addItem);
+express.post('/item/upload', uploadRouter);
 
 
 // mount the handler to the route
