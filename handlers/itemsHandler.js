@@ -11,7 +11,7 @@ function addItem(request, response) {
         .insert({
             name: request.body.name,
             desc: request.body.desc,
-            imageName: request.body.image,
+            imageName: request.body.imageName,
             price: request.body.price
         }).then(data => {
             response.json({

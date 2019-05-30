@@ -1,6 +1,7 @@
 const Express = require('express');
 var bodyParser = require("body-parser");
 var cors = require('cors');
+var path = require('path');
 
 var uploadRouter = require('./routes/upload');
 
@@ -18,6 +19,10 @@ function rootHandler(request, response) {
     response.json({ "test": "OK" });
 }
 
+
+express.use(Express.json()); // same as bodyParser.json()
+express.use(Express.urlencoded({ extended: false }));
+express.use(Express.static(path.join(__dirname, 'public')));
 
 // create new user
 express.get('/api/login', rootHandler);
